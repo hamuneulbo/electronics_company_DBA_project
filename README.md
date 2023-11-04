@@ -1,9 +1,9 @@
 ## ➡️프로젝트 설명
 
-전자 제품 판매 업체의 DBA 가 된 상황을 가정해서 사용자의 요구사항으로부터 데이터베이스를 구축하고,  
+`전자 제품 판매 업체의 DBA` 가 된 상황을 가정해서 사용자의 요구사항으로부터 데이터베이스를 구축하고,  
 쿼리문을 작성한 프로젝트 입니다.  
-요구사항 추출부터 E-R schema diagram 작성 내용이 project1 에 담겨있습니다.  
-E-R schema 에서 보완을 거쳐 Logical schema(BCNF) 로 도출해내는 과정과 Physical schema diagram을 구축하는 과정, 코드가 project2 에 담겨있습니다.  
+요구사항 추출부터 E-R schema diagram 작성 내용이 `project1` 에 담겨있습니다.  
+E-R schema 에서 보완을 거쳐 Logical schema(BCNF) 로 도출해내는 과정과 Physical schema diagram을 구축하는 과정, 코드가 `project2` 에 담겨있습니다.  
 
 ## 🧬프로젝트 구조
 ```
