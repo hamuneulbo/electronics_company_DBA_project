@@ -1,0 +1,376 @@
+CREATE TABLE manufacturer (
+company_name VARCHAR(30) PRIMARY KEY
+);
+CREATE TABLE product (
+name VARCHAR(32) PRIMARY KEY,
+company_name VARCHAR(30),
+price INT,
+type VARCHAR(10) NOT NULL,
+foreign key (company_name) references manufacturer (company_name)
+on delete set null
+);
+CREATE TABLE package (
+pkg_id INT AUTO_INCREMENT,
+pkg_name VARCHAR(32) NOT NULL,
+discount_rate INT,
+PRIMARY KEY(pkg_id)
+);
+CREATE TABLE package_item (
+pkg_id INT,
+p_name VARCHAR(32),
+PRIMARY KEY (pkg_id, p_name),
+foreign key (pkg_id) references package (pkg_id)
+on delete cascade,
+foreign key (p_name) references product (name)
+on delete cascade
+);
+CREATE TABLE inventory (
+p_name VARCHAR(32) PRIMARY KEY,
+wh_cnt INT DEFAULT 0,
+foreign key (p_name) references product (name)
+on delete cascade
+);
+CREATE TABLE reorder (
+order_number INT AUTO_INCREMENT,
+p_name VARCHAR(32) NOT NULL,
+amount INT NOT NULL,
+order_date DATETIME NOT NULL,
+arrival_date DATETIME NOT NULL,
+PRIMARY KEY (order_number),
+foreign key (p_name) references product (name)
+);
+CREATE TABLE store (
+s_id INT AUTO_INCREMENT,
+name VARCHAR(30) NOT NULL,
+phone_number VARCHAR(12),
+region VARCHAR(30),
+PRIMARY KEY(s_id)
+);
+CREATE TABLE store_inventory (
+s_id INT,
+p_name VARCHAR(32),
+store_cnt INT DEFAULT 0,
+PRIMARY KEY (s_id, p_name),
+foreign key (s_id) references store(s_id),
+foreign key (p_name) references product (name)
+);
+CREATE TABLE customer (
+c_id INT AUTO_INCREMENT,
+name VARCHAR(20) NOT NULL,
+contractor_number INT,
+phone_number VARCHAR(12),
+address VARCHAR(30),
+PRIMARY KEY (c_id)
+);
+CREATE TABLE online_c_info (
+c_id INT PRIMARY KEY,
+email VARCHAR(20) NOT NULL,
+birth_date DATETIME,
+card_number VARCHAR(17),
+ranking VARCHAR(10),
+foreign key (c_id) references customer (c_id)
+);
+CREATE TABLE sale (
+sale_number INT AUTO_INCREMENT,
+c_id INT,
+p_name VARCHAR(30),
+pkg_id INT,
+sale_date DATETIME,
+amount INT,
+offline INT,
+PRIMARY KEY (sale_number),
+foreign key (c_id) references customer (c_id),
+foreign key (p_name) references product (name),
+foreign key (pkg_id) references package (pkg_id),
+foreign key (offline) references  store (s_id)
+);
+CREATE TABLE delivery (
+d_company_name VARCHAR(20),
+tracking_number VARCHAR(17),
+sale_number INT,
+start_date DATETIME,
+promise_date DATETIME,
+arrival_date DATETIME,
+PRIMARY KEY (d_company_name, tracking_number),
+foreign key (sale_number) references sale (sale_number)
+);
+INSERT INTO manufacturer VALUES ('apple');
+INSERT INTO manufacturer VALUES ('samsung');
+INSERT INTO manufacturer VALUES ('lg');
+INSERT INTO manufacturer VALUES ('sony');
+INSERT INTO manufacturer VALUES ('sk');
+INSERT INTO manufacturer VALUES ('amazon');
+INSERT INTO manufacturer VALUES ('microsoft');
+INSERT INTO manufacturer VALUES ('hp');
+INSERT INTO manufacturer VALUES ('lenovo');
+INSERT INTO manufacturer VALUES ('google');
+INSERT INTO manufacturer VALUES ('asus');
+INSERT INTO manufacturer VALUES ('xiaomi');
+INSERT INTO manufacturer VALUES ('ibm');
+INSERT INTO manufacturer VALUES ('intel');
+INSERT INTO manufacturer VALUES ('nokia');
+INSERT INTO manufacturer VALUES ('cisco');
+insert into product values ('watch_4', 'samsung', 260000, 'watch');
+insert into product values ('ipad_4', 'apple', 690000, 'tablet');
+insert into product values ('2021_macbook_air', 'apple', 1300000, 'notebook');
+insert into product values ('2022_gram_360', 'lg', 1469000, 'notebook');
+insert into product values ('galaxy_tab_S8', 'samsung', 720000, 'tablet');
+insert into product values ('10000mAh_5', 'xiaomi', 35000, 'battery');
+insert into product values ('ipad_5', 'apple', 779000, 'tablet');
+insert into product values ('watch_7', 'apple', 909000, 'watch');
+insert into product values ('ultra_HD_TV', 'lg', 1290000, 'tv');
+insert into product values ('OLED_evo', 'lg', 14000000, 'tv');
+insert into product values ('galaxy_book2_pro_360', 'samsung', 2510000, 'notebook');
+insert into product values ('galaxy_book2_pro', 'samsung', 2540000, 'notebook');
+insert into product values ('galaxy_z_flip_3', 'samsung', 1254000, 'smartphone');
+insert into product values ('galaxy_buds_2', 'samsung', 119000, 'earphone');
+insert into product values ('15s-eq3030AU', 'hp', 689000, 'notebook');
+insert into product values ('14s-fq2033AU', 'hp', 809000, 'notebook');
+insert into product values ('airpods_pro_3', 'apple', 329000, 'earphone');
+insert into product values ('airpods_2', 'apple', 179000, 'earphone');
+insert into product values ('RX100_VI', 'sony', 1399000, 'camera');
+insert into product values ('RX0', 'sony', 999000, 'camera');
+insert into product values ('ACC-TRBX', 'sony', 89000, 'accessory');
+insert into product values ('RX0_2', 'sony', 749000, 'camera');
+insert into product values ('ZV-1', 'sony', 999000, 'camera');
+insert into product values ('16-d1243TX', 'hp', 1890000, 'notebook');
+insert into product values ('15-eh2053AU', 'hp', 1019000, 'notebook');
+insert into product values ('HyperX_S', 'hp', 139000, 'earphone');
+insert into product values ('xiaomi_12', 'xiaomi', 799700, 'smartphone');
+insert into product values ('xiaomi_12_pro', 'xiaomi', 1034010, 'smartphone');
+insert into package values (1, 'flip_3_n_buds',  5);
+insert into package values (2, 'copule_ipad_4_n_5', 11);
+insert into package values (3, '2022_tab_n_buds', 10);
+insert into package values (4, '2022_study_book_n_ear', 7);
+insert into package values (5, '2022_flex_tv_n_book', 10);
+insert into package values (6, '2022_couple_camera_1', 15);
+insert into package values (7, '2022_couple_camera_2', 19);
+insert into package values (8, '2022_couple_camera_3', 12);
+insert into package values (9, '2022_book_n_book_1', 4);
+insert into package values (10, '2022_game_book_n_ear', 9);
+insert into package values (11, '2022_game_book_n_book', 13);
+insert into package values (12, '2022_game_book_n_book_2', 13);
+insert into package values (13, '2022_phone_n_battery', 20);
+insert into package values (14, '2022_phone_n_phone', 15);
+insert into package values (15, '2022_couple_phone_1', 20);
+insert into package_item values (1, 'galaxy_z_flip_3');
+insert into package_item values (1, 'galaxy_buds_2');
+insert into package_item values (2, 'ipad_4');
+insert into package_item values (2, 'ipad_5');
+insert into package_item values (3, 'galaxy_buds_2');
+insert into package_item values (3, 'galaxy_tab_S8');
+insert into package_item values (4, 'airpods_2');
+insert into package_item values (4, '2021_macbook_air');
+insert into package_item values (5, '2022_gram_360');
+insert into package_item values (5, 'OLED_evo');
+insert into package_item values (5, 'ultra_HD_TV');
+insert into package_item values (6, 'RX100_VI');
+insert into package_item values (6, 'RX0');
+insert into package_item values (6, 'ACC-TRBX');
+insert into package_item values (7, 'ACC-TRBX');
+insert into package_item values (7, 'RX0');
+insert into package_item values (7, 'RX0_2');
+insert into package_item values (8, 'RX0_2');
+insert into package_item values (8, 'ZV-1');
+insert into package_item values (9, '14s-fq2033AU');
+insert into package_item values (9, '15s-eq3030AU');
+insert into package_item values (10, 'HyperX_S');
+insert into package_item values (10, '16-d1243TX');
+insert into package_item values (11, '16-d1243TX');
+insert into package_item values (11, '15-eh2053AU');
+insert into package_item values (12, '15-eh2053AU');
+insert into package_item values (12, '14s-fq2033AU');
+insert into package_item values (13, 'xiaomi_12');
+insert into package_item values (13, '10000mAh_5');
+insert into package_item values (14, 'xiaomi_12');
+insert into package_item values (14, 'xiaomi_12_pro');
+insert into package_item values (15, 'xiaomi_12');
+insert into package_item values (15, 'xiaomi_12_pro');
+insert into package_item values (15, '10000mAh_5');
+insert into inventory values ('ipad_4', 1000);
+insert into inventory values ('ipad_5', 12000);
+insert into inventory values ('watch_4', 9000);
+insert into inventory values ('watch_7', 19000);
+insert into inventory values ('ZV-1', 5000);
+insert into inventory values ('xiaomi_12', 10000);
+insert into inventory values ('xiaomi_12_pro', 9990);
+insert into inventory values ('ultra_HD_TV', 7090);
+insert into inventory values ('HyperX_S', 1000);
+insert into inventory values ('RX100_VI', 1000);
+insert into inventory values ('RX0', 1000);
+insert into inventory values ('RX0_2', 1500);
+insert into inventory values ('10000mAh_5', 1500);
+insert into inventory values ('14s-fq2033AU', 1500);
+insert into inventory values ('15-eh2053AU', 1500);
+insert into inventory values ('15s-eq3030AU', 100);
+insert into inventory values ('16-d1243TX', 100);
+insert into inventory values ('2021_macbook_air', 7777);
+insert into inventory values ('2022_gram_360', 777);
+insert into inventory values ('ACC-TRBX', 77);
+insert into inventory values ('airpods_pro_3', 9000);
+insert into inventory values ('airpods_2', 9000);
+insert into inventory values ('galaxy_book2_pro', 9000);
+insert into inventory values ('galaxy_book2_pro_360', 9000);
+insert into inventory values ('galaxy_buds_2', 900);
+insert into inventory values ('galaxy_tab_S8', 900);
+insert into inventory values ('galaxy_z_flip_3', 900);
+insert into inventory values ('OLED_evo', 900);
+insert into store values (1, 'hello_it', '01012121212', 'California');
+insert into store values (2, 'it_box', '01012341234', 'California');
+insert into store values (3, 'welcome_it', '01012345678', 'NewYork');
+insert into store values (4, 'welcome_it', '01012345678', 'North Carolina');
+insert into store values (5, 'welcome_it', '01012345678', 'Vermont');
+insert into store values (6, 'world_shop', '01009090909', 'Vermont');
+insert into store values (7, 'max_cheese', '01011112222', 'Vermont');
+insert into store values (8, 'good_job', '01034561212', 'Rhode Island');
+insert into store values (9, 'good_people', '01034563131', 'Rhode Island');
+insert into store values (10, 'good_people', '01034563131', 'New Jersey');
+insert into store values (11, 'good_people', '01034563131', 'Ohio');
+insert into store values (12, 'cheapest', '01034569999', 'Ohio');
+insert into store values (13, 'cheapest', '01034569999', 'Maryland');
+insert into store values (14, 'i_can_do', '01034569988', 'Maryland');
+insert into store values (15, 'i_can_do', '01034569988', 'Louisiana');
+insert into reorder values (1, 'ipad_4', 100, '2021-09-20', '2021-09-30');
+insert into reorder values (2, 'galaxy_z_flip_3', 1000, '2021-10-20', '2021-11-03');
+insert into reorder values (3, 'galaxy_buds_2', 500, '2021-10-29', '2021-11-15');
+insert into reorder values (4, 'watch_4', 100, '2021-10-29', '2021-11-10');
+insert into reorder values (5, 'airpods_2', 1000, '2021-10-30', '2021-11-19');
+insert into reorder values (6, 'airpods_pro_3', 2000, '2021-11-09', '2021-11-23');
+insert into reorder values (7, 'airpods_pro_3', 2000, '2021-11-11', '2021-11-30');
+insert into reorder values (8, '10000mAh_5', 9000, '2021-11-12', '2021-11-30');
+insert into reorder values (9, 'xiaomi_12', 1000, '2021-11-12', '2021-12-01');
+insert into reorder values (10, 'xiaomi_12_pro', 700, '2021-11-12', '2021-12-05');
+insert into reorder values (11, 'galaxy_book2_pro', 1700, '2021-11-25', '2021-12-05');
+insert into reorder values (12, 'galaxy_book2_pro', 300, '2021-11-27', '2021-12-10');
+insert into reorder values (13, 'galaxy_book2_pro_360', 2000, '2021-11-30', '2021-12-13');
+insert into reorder values (14, 'ZV-1', 900, '2022-01-05', '2022-01-13');
+insert into reorder values (15, 'RX0', 1200, '2022-01-05', '2022-01-15');
+insert into store_inventory values (1, 'ipad_4', 20);
+insert into store_inventory values (1, 'ipad_5', 15);
+insert into store_inventory values (1, 'airpods_pro_3', 10);
+insert into store_inventory values (1, 'airpods_2', 40);
+insert into store_inventory values (2, 'watch_7', 0);
+insert into store_inventory values (1, 'watch_7', 0);
+insert into store_inventory values (2, 'ipad_4', 0);
+insert into store_inventory values (2, '10000mAh_5', 100);
+insert into store_inventory values (2, 'watch_4', 5);
+insert into store_inventory values (1, 'galaxy_z_flip_3', 0);
+insert into store_inventory values (2, 'galaxy_z_flip_3', 0);
+insert into store_inventory values (3, 'galaxy_z_flip_3', 10);
+insert into store_inventory values (4, 'galaxy_z_flip_3', 0);
+insert into store_inventory values (5, 'galaxy_z_flip_3', 20);
+insert into store_inventory values (6, 'watch_7', 20);
+insert into store_inventory values (7, 'watch_7', 20);
+insert into store_inventory values (5, 'galaxy_buds_2', 120);
+insert into customer values (1, 'Sarah', 1, '01093939393', '1600 Mountain View, California');
+insert into customer values (2, 'Sera', null, '01053535353', '1300 Parkway, California');
+insert into customer values (3, 'Sophia', null, '01053535399', '680 street 3, Vermont');
+insert into customer values (4, 'Emily', 2, '01053345399', '77 street 9, Vermont');
+insert into customer values (5, 'Erica', 3, '01052845399', '10-2 james street, Vermont');
+insert into customer values (6, 'Wendy', null, '01333845399', '200 apu building, Ohio');
+insert into customer values (7, 'Irene', null, '01329945399', '182 uho building, Ohio');
+insert into customer values (8, 'Yoki', null, '01329665399', '182 uho building, Ohio');
+insert into customer values (9, 'Maki', null, '01329660999', '8000 beli hotel, Ohio');
+insert into customer values (10, 'Merry', 4, '01023450987', '8000 beli hotel, Ohio');
+insert into customer values (11, 'Elsa', 7, '01023452987', '113-2 square 8, New York');
+insert into customer values (12, 'Elisa', 6, '01023452987', '113-2 square 8, New York');
+insert into customer values (13, 'Elly', null, '01023452987', '113-2 square 8, New York');
+insert into customer values (14, 'Alice', null, '01444452987', '12-5 bellman street, New York');
+insert into customer values (15, 'Grace', null, '01442987987', '12-6 bellman street, New York');
+insert into customer values (16, 'Stella', 8, '01012987987', '12-1 guro street, New York');
+insert into customer values (17, 'Diana', null, '01044987987', '12-2 guro street, New York');
+insert into customer values (18, 'Sunny', 5, '01044987000', '118 miroway 10, Vermont');
+insert into customer values (19, 'Shon', null, '01011987000', '92-3 mik sqaure, Vermont');
+insert into customer values (20, 'Hoie', null, '01011987700', '92-4 mik sqaure, Vermont');
+insert into online_c_info values (1, 'sarah98@gmail.com', '2001-01-01', '5432123454329898', 'silver');
+insert into online_c_info values (2, 'sera53@gmail.com', '1999-08-01', '5432123411229898', 'gold');
+insert into online_c_info values (5, 'ericaQ@gmail.com', '1990-11-25', '8834123411229898', 'vip');
+insert into online_c_info values (6, 'wendyland@gmail.com', '1997-03-25', '8830000411229898', 'silver');
+insert into online_c_info values (10, 'merryxmas@gmail.com', '1988-01-23', '3340000411229898', 'silver');
+insert into online_c_info values (12, 'ilovelisa@gmail.com', '2002-02-23', '9940000411229898', 'silver');
+insert into online_c_info values (13, 'ilovelly@gmail.com', '2004-02-23', '9940000411229898', 'silver');
+insert into online_c_info values (15, 'graceful@gmail.com', '1970-09-11', '6640000411229898', 'gold');
+insert into online_c_info values (16, 'star90@gmail.com', '1998-11-11', '6640000411232198', 'silver');
+insert into online_c_info values (17, 'Dianamond@gmail.com', '2000-11-02', '6641300411232198', 'silver');
+insert into online_c_info values (18, 'cloudy@gmail.com', '2002-04-02', '6641377411232198', 'silver');
+insert into online_c_info values (19, 'sonya@gmail.com', '1986-06-02', '6655377411232198', 'silver');
+insert into online_c_info values (20, 'holland@gmail.com', '1995-06-02', '6604377411232198', 'silver');
+insert into online_c_info values (7, 'kitty99@gmail.com', '1980-06-27', '6098777411232198', 'silver');
+insert into online_c_info values (9, 'pather01@gmail.com', '2005-01-27', '6008777411232198', 'silver');
+insert into sale values (1, 1, 'ipad_4', null, '2020-10-12', 1, null);
+insert into sale values (2, 2, 'airpods_2', null, '2021-01-01', 1, null);
+insert into sale values (3, 4, 'airpods_2', null, '2021-01-01', 1, 1);
+insert into sale values (4, 7, 'airpods_2', null, '2021-01-11', 1, null);
+insert into sale values (5, 1, 'galaxy_z_flip_3', null, '2021-01-12', 1, null);
+insert into sale values (6, 2, 'galaxy_buds_2', null, '2021-01-13', 2, null);
+insert into sale values (7, 10, 'galaxy_buds_2', null, '2021-01-14', 100, null);
+insert into sale values (8, 15, null, 2, '2021-01-17', 1, null);
+insert into sale values (9, 16, null, 1, '2021-01-20', 5, null);
+insert into sale values (10, 8, 'watch_4', null, '2021-01-21', 2, 2);
+insert into sale values (11, 3, 'watch_4', null, '2021-01-21', 1, 2);
+insert into sale values (12, 3, '10000mAh_5', null, '2021-02-28', 1, 2);
+insert into sale values (13, 18, '10000mAh_5', null, '2021-03-28', 4, null);
+insert into sale values (14, 20, null, 5, '2021-04-01', 1, null);
+insert into sale values (15, 14, 'ZV-1', null, '2021-04-29', 1, null);
+insert into sale values (16, 17, 'watch_7', null, '2021-05-05', 2, null);
+insert into sale values (17, 19, 'watch_7', null, '2021-05-05', 3, null);
+insert into sale values (18, 20, 'watch_7', null, '2021-05-09', 1, null);
+insert into sale values (19, 16, null, 1, '2021-11-29', 1, null);
+insert into sale values (20, 16, 'ipad_5', null, '2022-05-01', 1, null);
+insert into sale values (21, 11, 'ipad_5', null, '2022-05-04', 1, null);
+insert into sale values (22, 11, 'watch_7', null, '2022-05-05', 1, null);
+insert into sale values (23, 11, null, 1, '2022-05-05', 1, null);
+insert into delivery values ('USPS', '0000000000000001', 1, '2020-10-14', '2020-10-17', '2020-10-16');
+insert into delivery values ('USPS', '0000000000000002', 2, '2021-01-03', '2021-01-10', null);
+insert into delivery values ('YELLOW', '0000000000000001', 4, '2021-01-12', '2021-01-17', '2021-01-17');
+insert into delivery values ('YELLOW', '0000000000000002', 5, '2021-01-15', '2021-01-20', '2021-01-21');
+insert into delivery values ('YELLOW', '0000000000000003', 6, '2021-01-15', '2021-01-22', '2021-01-21');
+insert into delivery values ('YELLOW', '0000000000000004', 7, '2021-01-16', '2021-01-26', '2021-01-20');
+insert into delivery values ('YELLOW', '0000000000000005', 7, '2021-01-16', '2021-01-26', '2021-01-20');
+insert into delivery values ('YELLOW', '0000000000000007', 8, '2021-01-20', '2021-01-26', '2021-01-27');
+insert into delivery values ('YELLOW', '0000000000000006', 9, '2021-01-20', '2021-01-26', '2021-01-27');
+insert into delivery values ('USPS', '0000000000000003',13, '2021-04-01', '2021-04-07', '2021-04-03');
+insert into delivery values ('USPS', '0000000000000004',14, '2021-04-01', '2021-04-07', '2021-04-05');
+insert into delivery values ('USPS', '0000000000000005',15, '2021-05-02', '2021-05-10', '2021-05-11');
+insert into delivery values ('USPS', '0000000000000006', 16, '2021-05-09', '2021-05-16', '2021-05-12');
+insert into delivery values ('YELLOW', '0000000000000008', 17, '2021-05-09', '2021-05-16', '2021-05-12');
+insert into delivery values ('YELLOW', '0000000000000009', 18, '2021-05-11', '2021-05-18', '2021-05-18');
+insert into delivery values('YELLOW', '0000000000000010', 19, '2021-11-29', '2021-12-05', '2021-12-12');
+delete from reorder;
+delete from delivery;
+delete from sale;
+delete from store_inventory;
+delete from store;
+delete from online_c_info;
+delete from customer;
+delete from package_item;
+delete from package;
+delete from inventory;
+delete from product;
+delete from manufacturer;
+DROP TABLE reorder;
+DROP TABLE delivery;
+DROP TABLE sale;
+DROP TABLE store_inventory;
+DROP TABLE store;
+DROP TABLE online_c_info;
+DROP TABLE customer;
+DROP TABLE package_item;
+DROP TABLE package;
+DROP TABLE inventory;
+drop table product;
+drop table manufacturer;
+drop view p_price;
+drop view pk_price;
+drop view pkg_price;
+drop view t3_1;
+drop view t3_2;
+drop view t3_3;
+drop view t3_4;
+drop view t3_5;
+drop view t7;
+drop view type2;
+drop view type2_1;
+drop view type5;
+drop view type7;
+drop view type7_2;
