@@ -55,6 +55,6 @@ E-R schema 에서 보완을 거쳐 Logical schema(BCNF) 로 도출해내는 과�
 └── README.md
 ```
 
-## 👩‍💻스택
+## ❇️스택
 - Language : `C`
 - Database : `MySQL`
